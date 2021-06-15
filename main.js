@@ -157,33 +157,44 @@ function ageCheck(data,display)
 			//console.log("agelimit:"+data.centers[x].sessions[0].min_age_limit+"\n\n");
 			output+="No. of dose 1 available:"+data.centers[x].sessions[y].available_capacity_dose1+"<br>";
 			output+="Fee type:"+data.centers[x].fee_type+"<br><br>";
-			alarm=1;
+			if(data.centers[x].fee_type=="Free")
+				alarm=1;
 			flag=1;
 		}
 		else
 		{
 			//output+="No dose available in"+data.centers[x].name+"<br><br>";
 			//console.log("No dose available in"+data.centers[x].name);
-			
-			
+
 		}
 	}
 	if(flag==0)
 		output+="No doses available<br>";
 	
-	  if((alarm==1) &&(document.getElementById('toggleb').value=="on"))
-		playaudio(); 
+	  if((alarm==1) &&(document.getElementById('toggleb').value=="on") && (flag==1))
+		playaudiofree(); 
 		
+		else if((alarm==0) &&(document.getElementById('toggleb').value=="on") && (flag==1))
+		{
+			//playaudiopaid();			for paid notification
+		}
 
 	output+="</p>"
 	return (output);
 }
 
 
- function playaudio(){
+ function playaudiofree(){
 
 
-  document.getElementById('myAudio').play();
+  document.getElementById('myAudiofree').play();
+
+} 
+
+ function playaudiopaid(){
+
+
+  //document.getElementById('myAudiopaid').play();
 
 } 
 
@@ -195,13 +206,16 @@ function soundonoff()
 		document.getElementById('toggleb').innerHTML=" Sound On ";	
 		document.getElementById('toggleb').value="off"; 
 		console.log("sound off");
-		document.getElementById('myAudio').pause();
+		document.getElementById('myAudiofree').pause();
+		document.getElementById('myAudiopaid').pause();
+		alert("Sound turned off");
 		}
 	else if(sound=="off")	{
 		sound="on";  	
 		document.getElementById('toggleb').innerHTML=" Sound Off ";	
 		document.getElementById('toggleb').value="on"; 
 		console.log("sound on");
+		alert("Sound turned on");
 		}
 }
 
