@@ -8,8 +8,10 @@ $(document).ready(function()
 	var todaydate= today[2]+"/"+today[1]+"/"+today[0];
 	var ekm="_id=307", alp="_id=301",idk="_id=306",kot="_id=304",tri="_id=303";
 	
-	var tmrw=parseInt(today[2])+1;
-	var tmrwdate= tmrw.toString()+"/"+today[1]+"/"+today[0];
+	var nextweek=parseInt(today[2])+7;
+	var secondWeek=nextweek+7;
+	var nextweek1= nextweek.toString()+"/"+today[1]+"/"+today[0];
+	var nextweek2= secondWeek.toString()+"/"+today[1]+"/"+today[0];
 	
 	urlFirst="https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district";
 
@@ -18,6 +20,39 @@ $(document).ready(function()
 	var display="";
 	
 
+	
+	function ApiRequest(var district, var date1, var date2, var date3)
+	{
+		var dates=[date1,date2,date3];
+		
+		for(let x in dates)
+			$.ajax({
+				type:"GET",
+				url:   urlFirst + district +"&date="+ dates[x] + urlLast,
+
+				beforeSend: function()
+				   {	//console.log("loading...");
+						
+				   },
+				
+			   success:function(data)
+				{  
+					//display+="<h1>Ernakulam Centers</h1>";
+					//console.log(data);
+					//console.log("On date:"+todaydate);
+					//console.log("district: Ernakulam");
+					display=ageCheck(data,display);
+					$("#result").html(display);
+					
+				}
+			});
+	}
+	
+	
+	
+	
+	
+	
 	
 	setInterval(function(){ 
         $.ajax({
