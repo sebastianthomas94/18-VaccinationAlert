@@ -9,9 +9,29 @@ $(document).ready(function()
 	var ekm="_id=307", alp="_id=301",idk="_id=306",kot="_id=304",tri="_id=303";
 	
 	var nextweek=parseInt(today[2])+7;
-	var secondWeek=nextweek+7;
+	if(nextweek>=31)
+	{
+		if(parseInt(today[1])%2)
+			nextweek=7-(30-parseInt(today[2]));
+		else
+			nextweek=7-(31-parseInt(today[2]));
+		today[1]=parseInt(today[1])+1;
+		
+	}
 	var nextweek1= nextweek.toString()+"/"+today[1]+"/"+today[0];
+	var secondWeek=nextweek+7;
+	{
+		if(secondWeek>=31)
+			if(parseInt(today[1])%2)
+				secondWeek=(7-(31-nextweek));
+			else
+				secondWeek=(7-(30-nextweek));
+		today[1]=(parseInt(today[1])+1);
+	}
 	var nextweek2= secondWeek.toString()+"/"+today[1]+"/"+today[0];
+
+	
+	console.log(todaydate);console.log(nextweek1);console.log(nextweek2);
 	
 	urlFirst="https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district";
 
@@ -29,12 +49,13 @@ $(document).ready(function()
 		for(let x in dates)
 			$.ajax({
 				type:"GET",
-				url:   urlFirst + district +"&date="+ dates[x] + urlLast,
-				async: false,
+				url:   urlFirst + district +"&date="+ dates[x],
+				//async: false,
 
 				beforeSend: function()
 				   {	//console.log("loading...");
-						
+						//console.log(dates[x]);
+						//console.log(urlFirst + district +"&date="+ dates[x]);
 				   },
 				
 			   success:function(data)
@@ -54,15 +75,33 @@ $(document).ready(function()
 					//console.log(data);
 					//console.log("On date:"+todaydate);
 					//console.log("district: Ernakulam");
-					display=ageCheck(data,display,x);
 					
-					if(district==ekm)	$("#ekm").html(display);
-					if(district==alp)	$("#alp").html(display);
-					if(district==idk)	$("#idk").html(display);
-					if(district==kot)	$("#kot").html(display);
-					if(district==tri)	$("#tri").html(display);
+					//display=ageCheck(data,display,x);
+					
+					if((district==ekm)  && (x==0) )	$("#ekm_w1").html(ageCheck(data,display,x));
+					else if((district==ekm)  && (x==1)) $("#ekm_w2").html(ageCheck(data,display,x));
+					else if((district==ekm)  && (x==2))	$("#ekm_w3").html(ageCheck(data,display,x));
 					
 					
+					if((district==alp)  && (x==0) )	$("#alp_w1").html(ageCheck(data,display,x));
+					else if((district==alp)  && (x==1)) $("#alp_w2").html(ageCheck(data,display,x));
+					else if((district==alp)  && (x==2)) $("#alp_w3").html(ageCheck(data,display,x));
+					
+					
+					if((district==idk)  && (x==0) )	$("#idk_w1").html(ageCheck(data,display,x));
+					else if((district==idk)  && (x==1) ) $("#idk_w2").html(ageCheck(data,display,x));
+					else if((district==idk)  && (x==2) ) $("#idk_w3").html(ageCheck(data,display,x));
+					
+					
+					if((district==kot)  && (x==0) )	$("#kot_w1").html(ageCheck(data,display,x));
+					else if((district==kot)  && (x==1) )	$("#kot_w2").html(ageCheck(data,display,x));
+					else if((district==kot)  && (x==2) )	$("#kot_w3").html(ageCheck(data,display,x));
+
+					
+					
+					if((district==tri)  && (x==0) )	$("#tri_w1").html(ageCheck(data,display,x));
+					else if((district==tri)  && (x==1) )	$("#tri_w2").html(ageCheck(data,display,x));
+					else if((district==tri)  && (x==2) )	$("#tri_w3").html(ageCheck(data,display,x));
 					
 				}
 			});
@@ -71,24 +110,27 @@ $(document).ready(function()
 		setInterval(function(){ 
 		
 			display="";
-			display+="<h4>Ernakulam Centers</h4>";
+
+
+			//display+="<h4>Ernakulam Centers</h4>";
 			ApiRequest(ekm, todaydate, nextweek1, nextweek2);
 			
 			display="";
-			display+="<h4>Alapuzha Centers</h4>";
+			//display+="<h4>Alapuzha Centers</h4>";
 			ApiRequest(alp, todaydate, nextweek1, nextweek2);
 			
 			display="";
-			display+="<h4>Idukki Centers</h4>";
+			//display+="<h4>Idukki Centers</h4>";
 			ApiRequest(idk, todaydate, nextweek1, nextweek2);
 			
 			display="";
-			display+="<h4>Kottayam Centers</h4>";
+			//display+="<h4>Kottayam Centers</h4>";
 			ApiRequest(kot, todaydate, nextweek1, nextweek2);
 			
 			display="";
-			display+="<h4>Trissur Centers</h4>";
+			//display+="<h4>Trissur Centers</h4>";
 			ApiRequest(tri, todaydate, nextweek1, nextweek2);
+
 
 			
 		}, 10000);
