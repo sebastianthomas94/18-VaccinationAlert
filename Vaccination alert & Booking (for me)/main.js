@@ -1,11 +1,12 @@
 $(document).ready(function()
 {   
+	$("#OTP").hide();
 	var date=new Date()
 	date=date.toISOString(date);
 	date=date.split("T");
 	var today=date[0];
 	today=today.split("-");
-	var todaydate= today[2]+"/"+today[1]+"/"+today[0];
+	var todaydate= today[2]+"-"+today[1]+"-"+today[0];
 	var ekm="_id=307", alp="_id=301",idk="_id=306",kot="_id=304",tri="_id=303";
 	
 
@@ -22,17 +23,19 @@ $(document).ready(function()
 		today[1]=parseInt(today[1])+1;
 		
 	}
-	var nextweek1= nextweek.toString()+"/"+today[1]+"/"+today[0];
+	var nextweek1= nextweek.toString()+"-"+today[1]+"-"+today[0];
 	var secondWeek=nextweek+7;
+	
+	if(secondWeek>=31)
 	{
-		if(secondWeek>=31)
-			if(parseInt(today[1])%2)
-				secondWeek=(7-(31-nextweek));
-			else
-				secondWeek=(7-(30-nextweek));
+		if(parseInt(today[1])%2)
+			secondWeek=(7-(31-nextweek));
+		else
+			secondWeek=(7-(30-nextweek));
 		today[1]=(parseInt(today[1])+1);
 	}
-	var nextweek2= secondWeek.toString()+"/"+today[1]+"/"+today[0];
+	
+	var nextweek2= secondWeek.toString()+"-"+today[1]+"-"+today[0];
 
 	
 	console.log(todaydate);console.log(nextweek1);console.log(nextweek2);
@@ -54,33 +57,17 @@ $(document).ready(function()
 			$.ajax({
 				type:"GET",
 				url:   urlFirst + district +"&date="+ dates[x],
-				//async: false,
+				
 
 				beforeSend: function()
-				   {	//console.log("loading...");
+				   {	
+						//console.log("loading...");
 						//console.log(dates[x]);
 						//console.log(urlFirst + district +"&date="+ dates[x]);
 				   },
 				
 			   success:function(data)
 				{  
-					/* if((district==ekm) && (x==0))
-						display+="<h1>Ernakulam Centers</h1>";
-					else if((district==alp) && (x==0))
-						display+="<h1>Alapuzha Centers</h1>";
-					else if((district==idk) && (x==0))
-						display+="<h1>Idukki Centers</h1>";
-					else if((district==kot) && (x==0))
-						display+="<h1>Kottayam Centers</h1>";
-					else if((district==tri) && (x==0))
-						display+="<h1>Trissur Centers</h1>"; */
-					
-					//display+="<h1>Ernakulam Centers</h1>";
-					//console.log(data);
-					//console.log("On date:"+todaydate);
-					//console.log("district: Ernakulam");
-					
-					//display=ageCheck(data,display,x);
 					
 					if((district==ekm)  && (x==0) )	$("#ekm_w1").html(ageCheck(data,display,x));
 					else if((district==ekm)  && (x==1)) $("#ekm_w2").html(ageCheck(data,display,x));
@@ -115,24 +102,22 @@ $(document).ready(function()
 		
 			display="";
 
-
-			//display+="<h4>Ernakulam Centers</h4>";
 			ApiRequest(ekm, todaydate, nextweek1, nextweek2);
 			
 			display="";
-			//display+="<h4>Alapuzha Centers</h4>";
+			
 			ApiRequest(alp, todaydate, nextweek1, nextweek2);
 			
 			display="";
-			//display+="<h4>Idukki Centers</h4>";
+			
 			ApiRequest(idk, todaydate, nextweek1, nextweek2);
 			
 			display="";
-			//display+="<h4>Kottayam Centers</h4>";
+			
 			ApiRequest(kot, todaydate, nextweek1, nextweek2);
 			
 			display="";
-			//display+="<h4>Trissur Centers</h4>";
+		
 			ApiRequest(tri, todaydate, nextweek1, nextweek2);
 
 
@@ -156,17 +141,15 @@ function ageCheck(data,display,y)
 {
 	let flag=0, alarm=0;
 	var output=display;
-	//console.log("\n\n\n________centers were age limit satisfies_______\n\n")
+	
 	for (let x in data.centers)
 	{
 		for(let y in data.centers[x].sessions)
-		if((data.centers[x].sessions[y].min_age_limit<minAge) && (data.centers[x].sessions[y].available_capacity_dose1>-1))
+		if((data.centers[x].sessions[y].min_age_limit<minAge) && (data.centers[x].sessions[y].available_capacity_dose1>0))
 		{
 			output+="Center:"+data.centers[x].name+"<br>";
-			//console.log("center:"+data.centers[x].name);
 			output+="Date:"+data.centers[x].sessions[y].date+"<br>";
 			output+="Mininum Agelimit:"+data.centers[x].sessions[y].min_age_limit+"<br>"
-			//console.log("agelimit:"+data.centers[x].sessions[0].min_age_limit+"\n\n");
 			output+="No. of dose 1 available:"+data.centers[x].sessions[y].available_capacity_dose1+"<br>";
 			output+="Fee type:"+data.centers[x].fee_type+"<br>";
 			
@@ -181,15 +164,14 @@ function ageCheck(data,display,y)
 
 			
 			if(data.centers[x].fee_type=="Free")
+			{
 				alarm=1;
+				$("#OTP").show();
+				
+			}
 			flag=1;
 		}
-		else
-		{
-			//output+="No dose available in"+data.centers[x].name+"<br><br>";
-			//console.log("No dose available in"+data.centers[x].name);
 
-		}
 	}
 	if(flag==0)
 		if(y==0)

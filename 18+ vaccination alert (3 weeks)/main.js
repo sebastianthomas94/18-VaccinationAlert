@@ -8,6 +8,10 @@ $(document).ready(function()
 	var todaydate= today[2]+"/"+today[1]+"/"+today[0];
 	var ekm="_id=307", alp="_id=301",idk="_id=306",kot="_id=304",tri="_id=303";
 	
+
+	console.log("Age upto:"+minAge);
+	console.log("Maximum Acceptable Fees:"+minFee);
+	
 	var nextweek=parseInt(today[2])+7;
 	if(nextweek>=31)
 	{
@@ -20,14 +24,16 @@ $(document).ready(function()
 	}
 	var nextweek1= nextweek.toString()+"/"+today[1]+"/"+today[0];
 	var secondWeek=nextweek+7;
-	{
+	
 		if(secondWeek>=31)
+		{
 			if(parseInt(today[1])%2)
 				secondWeek=(7-(31-nextweek));
 			else
 				secondWeek=(7-(30-nextweek));
-		today[1]=(parseInt(today[1])+1);
-	}
+			today[1]=(parseInt(today[1])+1);
+		}
+	
 	var nextweek2= secondWeek.toString()+"/"+today[1]+"/"+today[0];
 
 	
@@ -144,7 +150,8 @@ $(document).ready(function()
 	
 	
 	
-
+	const minAge=30, minFee=300;
+	
 
 
 function ageCheck(data,display,y)
@@ -155,7 +162,7 @@ function ageCheck(data,display,y)
 	for (let x in data.centers)
 	{
 		for(let y in data.centers[x].sessions)
-		if((data.centers[x].sessions[y].min_age_limit<30) && (data.centers[x].sessions[y].available_capacity_dose1>0))
+		if((data.centers[x].sessions[y].min_age_limit<minAge) && (data.centers[x].sessions[y].available_capacity_dose1>0))
 		{
 			output+="Center:"+data.centers[x].name+"<br>";
 			//console.log("center:"+data.centers[x].name);
@@ -169,13 +176,13 @@ function ageCheck(data,display,y)
 				for(let z in data.centers[x].vaccine_fees)
 				{	
 					output+="Price:"+data.centers[x].vaccine_fees[z].fee+"<br>";	
-					if(data.centers[x].vaccine_fees[z].fee<300)
+					if((data.centers[x].vaccine_fees[z].fee<minFee) && (data.centers[x].sessions[y].available_capacity_dose1>1))
 						alarm=1;
 				}
 			output+="Vaccine:"+data.centers[x].sessions[y].vaccine+"<br><br>";
 
 			
-			if(data.centers[x].fee_type=="Free")
+			if((data.centers[x].fee_type=="Free") && (data.centers[x].sessions[y].available_capacity_dose1>1))
 				alarm=1;
 			flag=1;
 		}
